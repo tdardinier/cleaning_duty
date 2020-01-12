@@ -12,11 +12,12 @@ bathrooms = [[0, 1, 2, 10], [3, 8, 9], [4, 5, 6, 7]]
 tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Floor"]
 first_day = (13, 1, 2020)
 
-# rd.seed(42)
-
 style = "plain"
 if len(sys.argv) >= 2:
     style = str(sys.argv[1])
+
+if len(sys.argv) >= 3:
+    rd.seed(int(sys.argv[2]))
 
 n_other_tasks = len(tasks)
 n_bathrooms = len(bathrooms)
@@ -104,9 +105,25 @@ for i in range(n_weeks):
     d = d + timedelta(days=7)
     i += 1
 
-pretty_schedule = [[weeks[n]] + [names[i] for i in week] for (n, week) in enumerate(schedule)]
+pretty_schedule = [[weeks[n]] + ["&nbsp;" + names[i] for i in week] for (n, week) in enumerate(schedule)]
+headers = ["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
 
-print(tabulate(pretty_schedule, headers=["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks, tablefmt=style))
+headers_plus = headers[:1]
+pretty_schedule_plus = []
+
+for i in range(n_tasks):
+    h = headers[i + 1]
+    headers_plus.append(h)
+    headers_plus.append("✓")
+
+for t in pretty_schedule:
+    t_plus = t[:1]
+    for i in range(n_tasks):
+        t_plus.append(t[i + 1])
+        t_plus.append(" ")
+    pretty_schedule_plus.append(t_plus)
+
+print(tabulate(pretty_schedule_plus, headers=headers_plus, tablefmt=style))
 
 if style == "plain":
     print("Number of jobs per person")
