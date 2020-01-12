@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+import sys
 import random as rd
 from tabulate import tabulate
 from datetime import datetime  
@@ -10,6 +13,10 @@ tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Fl
 first_day = (13, 1, 2020)
 
 # rd.seed(42)
+
+style = "plain"
+if len(sys.argv) >= 2:
+    style = str(sys.argv[1])
 
 n_other_tasks = len(tasks)
 n_bathrooms = len(bathrooms)
@@ -40,38 +47,44 @@ def get_tasks_mini(person, counter):
             s.add(i + n_bathrooms)
     return s
 
-def total_number_of_jobs(person, counter):
-    return sum(counter[person])
+def worked_last_week(person):
+    if len(schedule) >= 1:
+        return person in schedule[-1]
+    return False
 
 def update(i):
     global schedule
-    # print("Update", i)
-    week = [-1 for _ in range(n_tasks)]
-    persons = set(range(n_persons))
-    for (ib, b) in enumerate(bathrooms):
-        ind = i % len(b)
-        p = b[ind]
-        week[ib] = p
-        persons.remove(p)
-    persons = list(persons)
-    rd.shuffle(persons)
-    c = count()
-    persons.sort(key = lambda p: sum(c[p])) # Priority to people with fewer jobs
-    avail_tasks = set(range(n_bathrooms, n_tasks))
-    for p in persons[:len(avail_tasks)]:
-        s = get_tasks_mini(p, c).intersection(avail_tasks)
-        if len(s) == 0:
-            # print("Failure", i)
-            return False
-        task = rd.sample(s, 1)[0]
-        avail_tasks.remove(task)
-        week[task] = p
-    schedule.append(week)
-    if i + 1 < n_weeks:
-        r = update(i + 1)
-        while not r:
-            schedule = schedule[:i]
-            r = update(i)
+
+    done = False
+
+    while not done:
+        week = [-1 for _ in range(n_tasks)]
+        persons = set(range(n_persons))
+        for (ib, b) in enumerate(bathrooms):
+            ind = i % len(b)
+            p = b[ind]
+            week[ib] = p
+            persons.remove(p)
+        persons = list(persons)
+        rd.shuffle(persons)
+        c = count()
+        persons.sort(key = lambda p: 2 * sum(c[p]) + worked_last_week(p)) # Priority to people with fewer jobs and who did pause
+        avail_tasks = set(range(n_bathrooms, n_tasks))
+        for p in persons[:len(avail_tasks)]:
+            s = get_tasks_mini(p, c).intersection(avail_tasks)
+            if len(s) == 0:
+                # print("Failure", i)
+                return False
+            task = rd.sample(s, 1)[0]
+            avail_tasks.remove(task)
+            week[task] = p
+        schedule.append(week)
+        if i + 1 < n_weeks:
+            done = update(i + 1)
+            if not done:
+                schedule = schedule[:i]
+        else:
+            done = True
     return True
 
 update(0)
@@ -93,4 +106,10 @@ for i in range(n_weeks):
 
 pretty_schedule = [[weeks[n]] + [names[i] for i in week] for (n, week) in enumerate(schedule)]
 
-print(tabulate(pretty_schedule, headers=["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks, tablefmt="html"))
+print(tabulate(pretty_schedule, headers=["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks, tablefmt=style))
+
+if style == "plain":
+    print("Number of jobs per person")
+    c = count()
+    for (p, name) in enumerate(names):
+        print(name + ": " + str(sum(c[p])) + " jobs (" + str(sum(c[p][:n_bathrooms])) + " bathrooms)")
