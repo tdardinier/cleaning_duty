@@ -10,6 +10,7 @@ n_weeks = 20
 names = ["Anne-Sophie", "Li", "Claudia", "Jacob", "Mike", "Kai", "Haishan", "Charlotte", "Michael", "Thibault", "Daniel"]
 bathrooms = [[0, 1, 2, 10], [3, 8, 9], [4, 5, 6, 7]]
 tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Floor"]
+# tasks.append("Trash bags")
 first_day = (13, 1, 2020)
 
 style = "plain"
@@ -53,6 +54,16 @@ def worked_last_week(person):
         return person in schedule[-1]
     return False
 
+def last_job(person):
+    lj = -1
+    i = len(schedule) - 1
+    while i >= 0:
+        if person in schedule[i]:
+            lj = schedule[i].index(person)
+            break
+        i -= 1
+    return {lj}
+
 def update(i):
     global schedule
 
@@ -72,7 +83,7 @@ def update(i):
         persons.sort(key = lambda p: 2 * sum(c[p]) + worked_last_week(p)) # Priority to people with fewer jobs and who did pause
         avail_tasks = set(range(n_bathrooms, n_tasks))
         for p in persons[:len(avail_tasks)]:
-            s = get_tasks_mini(p, c).intersection(avail_tasks)
+            s = get_tasks_mini(p, c).intersection(avail_tasks) - last_job(p)
             if len(s) == 0:
                 # print("Failure", i)
                 return False
