@@ -10,7 +10,7 @@ n_weeks = 20
 names = ["Anne-Sophie", "Li", "Claudia", "Jacob", "Mike", "Kai", "Haishan", "Charlotte", "Michael", "Thibault", "Daniel"]
 bathrooms = [[0, 1, 2, 10], [3, 8, 9], [4, 5, 6, 7]]
 tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Floor"]
-# tasks.append("Trash bags")
+tasks.append("Trash bags")
 first_day = (13, 1, 2020)
 
 style = "plain"
@@ -28,7 +28,24 @@ n_persons = len(names)
 for i in range(n_bathrooms):
     rd.shuffle(bathrooms[i])
 
+# Special constraint 
+while bathrooms[0][-1] != 0 or bathrooms[0][0] == 2: # Anne-Sophie last one and Claudia not first week
+    rd.shuffle(bathrooms[0])
+
 schedule = []
+
+def special_constraint(i, person, s):
+    if person == 7 and i < 3: # Lisa no floor first 2 weeks
+        if 7 in s:
+            s.remove(7) # Or is it 7?
+
+def special_constraint_sort(i, p):
+    if i < 3 and p == 0: # Anne-Sophie
+        return 1000
+    elif i == 0 and p == 2: # Claudia
+        return 1000
+    else:
+        return 0
 
 def count():
     # count[person][task] = number of this task, this person
@@ -80,10 +97,11 @@ def update(i):
         persons = list(persons)
         rd.shuffle(persons)
         c = count()
-        persons.sort(key = lambda p: 2 * sum(c[p]) + worked_last_week(p)) # Priority to people with fewer jobs and who did pause
+        persons.sort(key = lambda p: 2 * sum(c[p]) + worked_last_week(p) + special_constraint_sort(i, p)) # Priority to people with fewer jobs and who did pause
         avail_tasks = set(range(n_bathrooms, n_tasks))
         for p in persons[:len(avail_tasks)]:
             s = get_tasks_mini(p, c).intersection(avail_tasks) - last_job(p)
+            special_constraint(i, p, s)
             if len(s) == 0:
                 # print("Failure", i)
                 return False
