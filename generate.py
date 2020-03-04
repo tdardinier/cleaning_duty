@@ -4,6 +4,7 @@ import sys
 import random as rd
 from tabulate import tabulate
 from datetime import datetime  
+from datetime import date
 from datetime import timedelta  
 
 n_weeks = 20
@@ -81,12 +82,15 @@ def last_job(person):
         i -= 1
     return {lj}
 
+iterations = 0
+
 def update(i):
-    global schedule
+    global schedule, iterations
 
     done = False
 
     while not done:
+        iterations += 1
         week = [-1 for _ in range(n_tasks)]
         persons = set(range(n_persons))
         for (ib, b) in enumerate(bathrooms):
@@ -126,8 +130,8 @@ def format_date(d):
         return ("{:02d}".format(x))
     return f(d.day) + "/" + f(d.month)
 
-d = datetime.now()
-d.replace(first_day[2], first_day[1], first_day[0])
+d = date(first_day[2], first_day[1], first_day[0])
+
 for i in range(n_weeks):
     d2 = d + timedelta(days=6)
     weeks.append(format_date(d) + " - " + format_date(d2))
@@ -159,3 +163,5 @@ if style == "plain":
     c = count()
     for (p, name) in enumerate(names):
         print(name + ": " + str(sum(c[p])) + " jobs (" + str(sum(c[p][:n_bathrooms])) + " bathrooms)")
+
+    print("Total number of iterations", iterations)
