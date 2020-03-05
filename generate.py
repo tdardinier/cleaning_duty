@@ -3,9 +3,9 @@
 import sys
 import random as rd
 from tabulate import tabulate
-from datetime import datetime  
+from datetime import datetime
 from datetime import date
-from datetime import timedelta  
+from datetime import timedelta
 
 n_weeks = 20
 names = ["Anne-Sophie", "Li", "Claudia", "Jacob", "Mike", "Kai", "Haishan", "Charlotte", "Michael", "Thibault", "Daniel"]
@@ -29,7 +29,7 @@ n_persons = len(names)
 for i in range(n_bathrooms):
     rd.shuffle(bathrooms[i])
 
-# Special constraint 
+# Special constraint
 while bathrooms[0][-1] != 0 or bathrooms[0][0] == 2: # Anne-Sophie last one and Claudia not first week
     rd.shuffle(bathrooms[0])
 
@@ -153,7 +153,7 @@ for t in pretty_schedule:
     t_plus = t[:1]
     for i in range(n_tasks):
         t_plus.append(t[i + 1])
-        t_plus.append(" ")
+        t_plus.append('<input type="checkbox" style="pointer-events: none">')
     pretty_schedule_plus.append(t_plus)
 
 print(tabulate(pretty_schedule_plus, headers=headers_plus, tablefmt=style))
