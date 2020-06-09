@@ -7,12 +7,11 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 
-n_weeks = 20
-names = ["Anne-Sophie", "Li", "Claudia", "Jacob", "Mike", "Kai", "Haishan", "Charlotte", "Michael", "Thibault", "Daniel"]
-bathrooms = [[0, 1, 2, 10], [3, 8, 9], [4, 5, 6, 7]]
-tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Floor"]
-tasks.append("Trash bags")
-first_day = (13, 1, 2020)
+n_weeks = 12
+names = ["Anne-Sophie", "Li", "Claudia", "Jacob", "Kai", "Charlotte", "Eylul", "Georg"]
+bathrooms = [[0, 1, 2, 6], [3], [4, 5, 7]]
+tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Floor", "Trash bags"]
+first_day = (8, 6, 2020)
 
 style = "plain"
 if len(sys.argv) >= 2:
@@ -30,37 +29,40 @@ for i in range(n_bathrooms):
     rd.shuffle(bathrooms[i])
 
 # Special constraint
-while bathrooms[0][-1] != 0 or bathrooms[0][0] == 2: # Anne-Sophie last one and Claudia not first week
-    rd.shuffle(bathrooms[0])
+# while bathrooms[0][-1] != 0 or bathrooms[0][0] == 2: # Anne-Sophie last one and Claudia not first week
+#   rd.shuffle(bathrooms[0])
 
 schedule = []
 
 def special_constraint(i, person, s):
-    if person == 7 and i < 3: # Lisa no floor first 2 weeks
-        if 7 in s:
-            s.remove(7) # Or is it 7?
+    pass
+    #if person == 7 and i < 3: # Lisa no floor first 2 weeks
+    #    if 7 in s:
+    #        s.remove(7) # Or is it 7?
 
 def special_constraint_sort(i, p):
-    if i < 3 and p == 0: # Anne-Sophie
-        return 1000
-    elif i == 0 and p == 2: # Claudia
-        return 1000
-    else:
-        return 0
+    return 0
+#    if i < 3 and p == 0: # Anne-Sophie
+#        return 1000
+#    elif i == 0 and p == 2: # Claudia
+#        return 1000
+#    else:
+#        return 0
 
 def count():
     # count[person][task] = number of this task, this person
     count = [[0 for _ in range(n_tasks)] for _ in names]
     for week in schedule:
         for i in range(n_tasks):
-            count[week[i]][i] += 1
+            if week[i] != None:
+                count[week[i]][i] += 1
     return count
 
 def get_tasks_mini(person, counter):
     c = counter[person][3:] # Not counting bathrooms
     m = min(c)
     M = max(c)
-    assert M - m <= 1 # Invariant
+    # assert M - m <= 1 # Invariant
     s = set()
     for i, n in enumerate(c):
         if n == m:
@@ -94,10 +96,13 @@ def update(i):
         week = [-1 for _ in range(n_tasks)]
         persons = set(range(n_persons))
         for (ib, b) in enumerate(bathrooms):
-            ind = i % len(b)
-            p = b[ind]
-            week[ib] = p
-            persons.remove(p)
+            if ib == 1 and iterations % 3 != 1:
+                week[ib] = None
+            else:
+                ind = i % len(b)
+                p = b[ind]
+                week[ib] = p
+                persons.remove(p)
         persons = list(persons)
         rd.shuffle(persons)
         c = count()
@@ -138,7 +143,13 @@ for i in range(n_weeks):
     d = d + timedelta(days=7)
     i += 1
 
-pretty_schedule = [[weeks[n]] + ["&nbsp;" + names[i] for i in week] for (n, week) in enumerate(schedule)]
+def get_name(i):
+    if i == None:
+        return ""
+    else:
+        return names[i]
+
+pretty_schedule = [[weeks[n]] + ["&nbsp;" + get_name(i) for i in week] for (n, week) in enumerate(schedule)]
 headers = ["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
 
 headers_plus = headers[:1]
