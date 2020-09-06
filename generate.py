@@ -7,11 +7,11 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 
-n_weeks = 12
-names = ["Anne-Sophie", "Li", "Claudia", "Jacob", "Kai", "Charlotte", "Eylul", "Georg"]
-bathrooms = [[0, 1, 2, 6], [3], [4, 5, 7]]
-tasks = ["Toilets", "Kitchen", "Trash (PET, paper)", "Trash (glass, metal)", "Floor", "Trash bags"]
-first_day = (8, 6, 2020)
+n_weeks = 15
+names = ["Anne-Sophie", "Li", "Eylul", "Carine", "Thibault", "Jacob", "Michael", "Charlotte", "Lucas", "Kai", "Pia"]
+bathrooms = [[0, 1, 2, 3], [4, 5, 6], [7, 8, 9, 10]]
+tasks = ["Toilets", "Kitchen", "PET & paper", "Glass & metal", "Floor", "Trash bags"]
+first_day = (7, 9, 2020)
 
 style = "plain"
 if len(sys.argv) >= 2:
@@ -96,13 +96,13 @@ def update(i):
         week = [-1 for _ in range(n_tasks)]
         persons = set(range(n_persons))
         for (ib, b) in enumerate(bathrooms):
-            if ib == 1 and iterations % 3 != 1:
-                week[ib] = None
-            else:
-                ind = i % len(b)
-                p = b[ind]
-                week[ib] = p
-                persons.remove(p)
+            # if ib == 1 and iterations % 3 != 1:
+             #   week[ib] = None
+            # else:
+            ind = i % len(b)
+            p = b[ind]
+            week[ib] = p
+            persons.remove(p)
         persons = list(persons)
         rd.shuffle(persons)
         c = count()
@@ -149,22 +149,39 @@ def get_name(i):
     else:
         return names[i]
 
-pretty_schedule = [[weeks[n]] + ["&nbsp;" + get_name(i) for i in week] for (n, week) in enumerate(schedule)]
-headers = ["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
+# pretty_schedule = [[weeks[n]] + ["&nbsp;" + get_name(i) for i in week] for (n, week) in enumerate(schedule)]
+# pretty_schedule = [[weeks[n]] + [get_name(i) for i in week] for (n, week) in enumerate(schedule)]
+
+task_name = ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
+tasks_per_person = []
+for week in schedule:
+    l = ["-" for _ in names]
+    for (i, n_person) in enumerate(week):
+        l[n_person] = task_name[i]
+    tasks_per_person.append(l)
+
+# print(tasks_per_person)
+
+pretty_schedule = [[weeks[n]] + [tasks_per_person[n][i] for i in range(len(names))] for n in range(len(weeks))]
+# headers = ["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
+headers = ["Weeks"] + names
+
 
 headers_plus = headers[:1]
 pretty_schedule_plus = []
 
-for i in range(n_tasks):
+# for i in range(n_tasks):
+for i in range(len(names)):
     h = headers[i + 1]
     headers_plus.append(h)
     headers_plus.append("✓")
 
 for t in pretty_schedule:
     t_plus = t[:1]
-    for i in range(n_tasks):
-        t_plus.append(t[i + 1])
-        t_plus.append('<input type="checkbox" style="pointer-events: none">')
+    for i in range(len(names)):
+        t_plus.append(" " + t[i + 1])
+        # t_plus.append('<input type="checkbox" style="pointer-events: none">')
+        t_plus.append('')
     pretty_schedule_plus.append(t_plus)
 
 print(tabulate(pretty_schedule_plus, headers=headers_plus, tablefmt=style))
