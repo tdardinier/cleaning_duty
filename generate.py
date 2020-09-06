@@ -10,7 +10,7 @@ from datetime import timedelta
 n_weeks = 15
 names = ["Anne-Sophie", "Li", "Eylul", "Carine", "Thibault", "Jacob", "Michael", "Charlotte", "Lucas", "Kai", "Pia"]
 bathrooms = [[0, 1, 2, 3], [4, 5, 6], [7, 8, 9, 10]]
-tasks = ["Toilets", "Kitchen", "PET & paper", "Glass & metal", "Floor", "Trash bags"]
+tasks = ["Toilets", "Kitchen", "PET/paper", "Glass/metal", "Floor", "Trash bags"]
 first_day = (7, 9, 2020)
 
 style = "plain"
