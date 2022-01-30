@@ -8,10 +8,10 @@ from datetime import date
 from datetime import timedelta
 
 n_weeks = 17
-names = ["Evgenios", "Xinyi", "Eylül", "Claire", "Thibault", "Jacob", "Michael", "Charlotte", "Jorge", "Kai", "Rei"]
+names = ["Evgenios", "Cassie", "Iva", " ", "Thibault", "Jacob", "Michael", "Norica", " ", "Kai", "Rei"]
 bathrooms = [[0, 1, 2, 3], [4, 5, 6], [7, 8, 9, 10]]
-tasks = ["Toilets", "Kitchen", "PET/paper", "Glass/metal", "Floor", "Trash bags"]
-first_day = (5, 10, 2021)
+tasks = ["Toilets", "Kitchen", "PET/paper", "Glass/metal", "Floor", "Trash"]
+first_day = (1, 2, 2022)
 
 style = "plain"
 if len(sys.argv) >= 2:
@@ -155,7 +155,7 @@ def get_name(i):
 task_name = ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
 tasks_per_person = []
 for week in schedule:
-    l = ["-" for _ in names]
+    l = ["" for _ in names]
     for (i, n_person) in enumerate(week):
         l[n_person] = task_name[i]
     tasks_per_person.append(l)
@@ -164,7 +164,7 @@ for week in schedule:
 
 pretty_schedule = [[weeks[n]] + [tasks_per_person[n][i] for i in range(len(names))] for n in range(len(weeks))]
 # headers = ["Weeks"] + ["Bathroom " + str(i + 1) for i in range(n_bathrooms)] + tasks
-headers = ["Weeks"] + names
+headers = ["Week"] + names
 
 
 headers_plus = headers[:1]
