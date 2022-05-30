@@ -11,7 +11,7 @@ n_weeks = 17
 names = ["Evgenios", "Cassie", "Iva", "Krista", "Thibault", "Jacob", "Michael", "Norica", "Lily", "Kai", "Rei"]
 bathrooms = [[0, 1, 2], [3, 4, 5, 6], [7, 8, 9, 10]]
 tasks = ["Toilets", "Kitchen", "PET/paper", "Glass/metal", "Floor", "Trash"]
-first_day = (1, 2, 2022)
+first_day = (31, 5, 2022)
 
 style = "plain"
 if len(sys.argv) >= 2:
