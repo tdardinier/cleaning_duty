@@ -1,4 +1,4 @@
-python3 generate.py html 13 > html/table.html
+python3 generate.py html 14 > html/table.html
 cat html/start.html html/table.html html/end.html > cleaning_duty.html
 
 if [ "$(uname)" == "Darwin" ]; then
