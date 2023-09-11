@@ -7,7 +7,7 @@ from datetime import date
 from datetime import timedelta
 
 n_weeks = 17
-names = ["Evgenios", "Tianyi", "Iva", "Vicky", "Winnie", "Jacob", "Timothy", "Adriel", "Linn", "Kai", "Yang Yi"]
+names = ["Evgenios", "Tianyi", "Iva", "Saho", "Winnie", "Jacob", "Timothy", "Norica", "Thomas", "Kai", "Yang Yi"]
 bathrooms = [[0, 1, 2], [3, 4, 5, 6], [7, 8, 9, 10]]
 tasks = ["Toilets", "Kitchen", "PET/paper", "Glass/metal", "Floor", "Trash"]
 first_day = (2, 5, 2023)
