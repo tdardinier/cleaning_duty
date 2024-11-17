@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import random as rd
+import sys
+from datetime import date, timedelta
+
 from tabulate import tabulate
-from datetime import date
-from datetime import timedelta
 
 n_weeks = 17
 names = ["Evgenios", "Nini", "Iva", "Vendela", "Winnie", "Jacob", "Timothy", "Annick", "Mandy", "Kai", "Norman"]
@@ -33,13 +33,13 @@ for i in range(n_bathrooms):
 
 schedule = []
 
-def special_constraint(i, person, s) -> None:
+def special_constraint(i: int, person: int, s: set[int]) -> None:
     pass
     #if person == 7 and i < 3: # Lisa no floor first 2 weeks
     #    if 7 in s:
     #        s.remove(7) # Or is it 7?
 
-def special_constraint_sort(i, p) -> int:
+def special_constraint_sort(i: int, p: int) -> int:
     return 0
 #    if i < 3 and p == 0: # Anne-Sophie
 #        return 1000
@@ -56,7 +56,7 @@ def count() -> list[list[int]]:
                 count[week[i]][i] += 1
     return count
 
-def get_tasks_mini(person, counter) -> set[int]:
+def get_tasks_mini(person: int, counter: list[list[int]]) -> set[int]:
     c = counter[person][3:] # Not counting bathrooms
     m = min(c)
     M = max(c)
@@ -67,12 +67,12 @@ def get_tasks_mini(person, counter) -> set[int]:
             s.add(i + n_bathrooms)
     return s
 
-def worked_last_week(person) -> bool:
+def worked_last_week(person: int) -> bool:
     if len(schedule) >= 1:
         return person in schedule[-1]
     return False
 
-def last_job(person) -> set[int]:
+def last_job(person: int) -> set[int]:
     lj = -1
     i = len(schedule) - 1
     while i >= 0:
@@ -84,7 +84,7 @@ def last_job(person) -> set[int]:
 
 iterations = 0
 
-def update(i) -> bool:
+def update(i: int) -> bool:
     global schedule, iterations
 
     done = False
@@ -128,7 +128,7 @@ update(0)
 
 weeks = []
 
-def format_date(d) -> str:
+def format_date(d: date) -> str:
     def f(x):
         return "{:02d}".format(x)
     return f(d.day) + "/" + f(d.month)
@@ -141,7 +141,7 @@ for i in range(n_weeks):
     d = d + timedelta(days=7)
     i += 1
 
-def get_name(i) -> str:
+def get_name(i: int) -> str:
     if i is None:
         return ""
     else:
