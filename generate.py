@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import sys
 import random as rd
@@ -33,13 +33,13 @@ for i in range(n_bathrooms):
 
 schedule = []
 
-def special_constraint(i, person, s):
+def special_constraint(i, person, s) -> None:
     pass
     #if person == 7 and i < 3: # Lisa no floor first 2 weeks
     #    if 7 in s:
     #        s.remove(7) # Or is it 7?
 
-def special_constraint_sort(i, p):
+def special_constraint_sort(i, p) -> int:
     return 0
 #    if i < 3 and p == 0: # Anne-Sophie
 #        return 1000
@@ -48,16 +48,15 @@ def special_constraint_sort(i, p):
 #    else:
 #        return 0
 
-def count():
-    # count[person][task] = number of this task, this person
+def count() -> list[list[int]]:
     count = [[0 for _ in range(n_tasks)] for _ in names]
     for week in schedule:
         for i in range(n_tasks):
-            if week[i] != None:
+            if week[i] is not None:
                 count[week[i]][i] += 1
     return count
 
-def get_tasks_mini(person, counter):
+def get_tasks_mini(person, counter) -> set[int]:
     c = counter[person][3:] # Not counting bathrooms
     m = min(c)
     M = max(c)
@@ -68,12 +67,12 @@ def get_tasks_mini(person, counter):
             s.add(i + n_bathrooms)
     return s
 
-def worked_last_week(person):
+def worked_last_week(person) -> bool:
     if len(schedule) >= 1:
         return person in schedule[-1]
     return False
 
-def last_job(person):
+def last_job(person) -> set[int]:
     lj = -1
     i = len(schedule) - 1
     while i >= 0:
@@ -85,7 +84,7 @@ def last_job(person):
 
 iterations = 0
 
-def update(i):
+def update(i) -> bool:
     global schedule, iterations
 
     done = False
@@ -129,9 +128,9 @@ update(0)
 
 weeks = []
 
-def format_date(d):
+def format_date(d) -> str:
     def f(x):
-        return ("{:02d}".format(x))
+        return "{:02d}".format(x)
     return f(d.day) + "/" + f(d.month)
 
 d = date(first_day[2], first_day[1], first_day[0])
@@ -142,8 +141,8 @@ for i in range(n_weeks):
     d = d + timedelta(days=7)
     i += 1
 
-def get_name(i):
-    if i == None:
+def get_name(i) -> str:
+    if i is None:
         return ""
     else:
         return names[i]
