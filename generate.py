@@ -7,10 +7,10 @@ from datetime import date, timedelta
 from tabulate import tabulate
 
 n_weeks = 17
-names = ["Evgenios", "Nini", "Iva", "Vendela", "Winnie", "Jacob", "Timothy", "Annick", "Mandy", "Kai", "Norman"]
+names = ["Nini", "Tianyi", "Iva", "Vendela", "Jianwen", "Claudia", "Timothy", "Elena", "Mandy", "Kai", "Norman"]
 bathrooms = [[0, 1, 2], [3, 4, 5, 6], [7, 8, 9, 10]]
 tasks = ["Toilets", "Kitchen", "PET/paper", "Glass/metal", "Floor", "Trash"]
-first_day = (10, 9, 2024)
+first_day = (7, 1, 2025)
 
 style = "plain"
 if len(sys.argv) >= 2:
